@@ -8,16 +8,21 @@ class Recipe(custom.GStreamerStatic):
     licenses = [License.LGPLv2Plus]
     extra_configure_options = "--enable-static"
     remotes = {'origin': 'git://anongit.freedesktop.org/gstreamer/gst-plugins-base'}
-    commit = '6c2ee2853d6b766bac20a6628948524a7e0cf8d7'
-    deps = ['glib', 'gstreamer-1.0', 'zlib', 'orc']
+    commit = 'origin/master'
+    deps = ['glib', 'gstreamer-1.0', 'libxml2', 'libogg', 'pango', 'libtheora',
+            'libvisual', 'libvorbis', 'zlib', 'orc', 'opus']
+    platform_deps = {Platform.ANDROID: [ 'tremor' ], Platform.IOS: [ 'tremor' ] }
     use_system_libs = True
 
     files_plugins_core_devel = [
+             'libgstadder',
              'libgstapp',
              'libgstaudioconvert',
              'libgstaudiorate',
              'libgstaudioresample',
              'libgstaudiotestsrc',
+             'libgstgio',
+             'libgstpango',
              'libgsttypefindfunctions',
              'libgstvideoconvert',
              'libgstvideorate',
@@ -26,6 +31,42 @@ class Recipe(custom.GStreamerStatic):
              'libgstvolume',
     ]
 
+    files_plugins_playback_devel = [
+             'libgstplayback',
+            ]
+
+    # Not used currently
+    files_plugins_encoding_devel = [
+             'libgstencodebin',
+            ]
+
+    files_plugins_codecs_devel = [
+             'libgstsubparse',
+             'libgstogg',
+             'libgsttheora',
+             'libgstvorbis',
+             'libgstopus',
+            ]
+
+    files_plugins_vis_devel = [
+             'libgstlibvisual',
+            ]
+
+    files_plugins_net_devel = [
+            'libgsttcp',
+    ]
+
+    files_plugins_sys_devel = []
+
+    platform_files_plugins_codecs_devel = {
+        Platform.ANDROID: [
+             'libgstivorbisdec',
+            ],
+        Platform.IOS: [
+             'libgstivorbisdec',
+            ]
+    }
+
     def prepare(self):
         self.append_env['CFLAGS'] = " -Wno-error "
         self.append_env['CXXFLAGS'] = " -Wno-error "
@@ -33,15 +74,27 @@ class Recipe(custom.GStreamerStatic):
         if self.config.target_platform != Platform.LINUX:
             self.configure_options += '--disable-gtk-doc '
 
-        self.configure_options += ' --disable-cdparanoia'
-        self.configure_options += ' --disable-x --disable-xvideo'
-        self.configure_options += ' --disable-alsa'
+        if self.config.variants.cdparanoia:
+            self.deps.append('cdparanoia')
+            self.files_plugins_sys_devel += ['libgstcdparanoia']
+        else:
+            self.configure_options += ' --disable-cdparanoia'
+
+        if self.config.variants.x11:
+            self.files_plugins_sys_devel += [
+                 'libgstximagesink',
+                 'libgstxvimagesink',
+                ]
+        else:
+            self.configure_options += ' --disable-x --disable-xvideo'
+
+        if self.config.variants.alsa:
+            self.files_plugins_sys_devel += ['libgstalsa']
+        else:
+            self.configure_options += ' --disable-alsa'
 
         if self.config.variants.nodebug:
             self.append_env['CFLAGS'] += ' -DGST_LEVEL_MAX=GST_LEVEL_FIXME'
 
-        if self.config.variants.owr_testing:
-            self.deps += ['pango']
-            self.files_plugins_core_devel += ['libgstpango']
-
         custom.GStreamerStatic.prepare(self)
+
