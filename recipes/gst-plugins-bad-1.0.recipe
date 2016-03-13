@@ -24,7 +24,7 @@ class Recipe(recipe.Recipe):
         --enable-srtp'
     remotes = {'origin': 'git://anongit.freedesktop.org/gstreamer/gst-plugins-bad'}
     commit = 'tags/1.7.90'
-    deps = ['gstreamer-1.0', 'gst-plugins-base-1.0', 'zlib', 'openh264', 'opus',
+    deps = ['gstreamer-1.0', 'gst-plugins-base-1.0', 'zlib', 'openh264',
             'libsrtp', 'openssl']
     use_system_libs = True
 
@@ -43,7 +43,6 @@ class Recipe(recipe.Recipe):
 
     files_plugins_codecs = [
              'lib/gstreamer-1.0/libgstopenh264%(mext)s',
-             'lib/gstreamer-1.0/libgstopus%(mext)s',
              'lib/gstreamer-1.0/libgstvideoparsersbad%(mext)s',
     ]
 

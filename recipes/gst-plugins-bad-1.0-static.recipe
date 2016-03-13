@@ -20,7 +20,7 @@ class Recipe(custom.GStreamerStatic):
         --disable-xvid --disable-zbar --disable-sdi --disable-hls --disable-qt'
     remotes = {'origin': 'git://anongit.freedesktop.org/gstreamer/gst-plugins-bad'}
     commit = 'tags/1.7.90'
-    deps = ['gstreamer-1.0', 'gst-plugins-base-1.0', 'zlib', 'openh264', 'opus',
+    deps = ['gstreamer-1.0', 'gst-plugins-base-1.0', 'zlib', 'openh264', 
             'libsrtp', 'openssl', 'graphene']
     use_system_libs = True
 
@@ -30,7 +30,6 @@ class Recipe(custom.GStreamerStatic):
 
     files_plugins_codecs_devel = [
              'libgstopenh264',
-             'libgstopus',
              'libgstvideoparsersbad',
     ]
 

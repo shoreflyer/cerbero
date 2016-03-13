@@ -9,7 +9,7 @@ class Recipe(custom.GStreamerStatic):
     extra_configure_options = "--enable-static"
     remotes = {'origin': 'git://anongit.freedesktop.org/gstreamer/gst-plugins-base'}
     commit = 'tags/1.7.90'
-    deps = ['glib', 'gstreamer-1.0', 'zlib', 'orc']
+    deps = ['glib', 'gstreamer-1.0', 'zlib', 'orc', 'opus']
     use_system_libs = True
 
     files_plugins_core_devel = [
@@ -24,6 +24,7 @@ class Recipe(custom.GStreamerStatic):
              'libgstvideoscale',
              'libgstvideotestsrc',
              'libgstvolume',
+             'libgstopus',
     ]
 
     def prepare(self):
